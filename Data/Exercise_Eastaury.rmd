@@ -1,0 +1,73 @@
+---
+title: "Exercise1_Eastaury"
+author: "sumuthuni"
+date: "2026-08-19"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+# Introduction
+
+This exercise develops a reproducible workflow for cleaning, integrating, analysing, and visualising estuarine ecological datasets. Fish catch records, water-quality data, spatial metadata, and species taxonomy were combined to examine fish abundance along a salinity gradient.
+
+# Load Packages
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(stringr)
+library(here)
+library(knitr)
+library(kable)
+
+
+```
+
+# Run Analysis
+
+```{r}
+source(here::here("code", "Exercise_estauries.R"))
+```
+
+# Clean Master Dataset
+
+```{r}
+head(master_dataset, 10) |>
+  Knit::kable(
+    digits = 2,
+    caption = "First 10 rows of the cleaned estuary master dataset"
+  )
+```
+
+# Statistical Summary Table
+
+```{r}
+summary_table |>
+  kable(
+    digits = 2,
+    caption = "Fish abundance and salinity summary by species and estuary zone"
+  )
+```
+
+# Fish Abundance Along the Salinity Gradient
+
+```{r fig.width=10, fig.height=7}
+estuary_plot
+```
+
+# Conclusion
+
+The workflow successfully cleaned and integrated the estuary datasets into a single master dataset. The resulting summary table and multi-panel plot demonstrate variation in fish abundance across salinity gradients and estuary zones.
