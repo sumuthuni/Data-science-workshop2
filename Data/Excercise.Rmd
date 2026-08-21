@@ -1,0 +1,19 @@
+---
+title: "Exercise"
+author: "sumuthuni"
+date: "2026-07-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+#creating table
+library(knitr)
+body_mass_summary |>
+  kable(
+    caption = "Maximum Body Mass (g) of Penguin Species by Island"
+  )
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+

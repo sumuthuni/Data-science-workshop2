@@ -1,0 +1,114 @@
+---
+title: "Workshop2"
+author: "sumuthuni"
+date: "2026-07-19"
+output: html_document
+---
+Practical Exercises: Penguins, Pivots, and Relational Data
+# Make sure packages are loaded
+library(tidyverse)
+library(palmerpenguins)
+
+# The messy metadata provided by your colleague
+island_metadata <- tibble(
+  island_name = c(" biscoe", "Dream ", "Torgersen"),
+  station_install = c("15/01/2003", "22-03-2004", "05/11/2001"),
+  latitude = c(-64.81, -64.73, -64.76)
+)
+
+print(island_metadata)
+
+#graph
+library(ggplot2)
+
+## Scroll to the right to see the new columns
+head(penguins_spatial)
+
+# Load packages
+library(dplyr)
+library(stringr)
+library(lubridate)
+
+## Exercise 1: Clean the metadata
+clean_metadata <- island_metadata |>
+  mutate(
+    island_name = str_trim(island_name),
+    island_name = str_to_title(island_name),
+    station_install = dmy(station_install)
+  )
+  ## Check cleaned metadata
+print(clean_metadata)
+
+# Exercise 2: Join metadata with penguins dataset
+penguins_spatial <- penguins |>
+  left_join(
+    clean_metadata,
+    by = join_by(island == island_name)
+  )
+
+# Check the result
+head(penguins_spatial)
+
+#Graph box plot
+
+  #Boxplot
+  ggplot(penguins_spatial,
+       aes(x = island,
+           y = body_mass_g,
+           fill = island)) +
+  geom_boxplot() +
+  labs(
+    title = "Body Mass Distribution by Island",
+    x = "Island",
+    y = "Body Mass (g)"
+  ) +
+  theme_minimal()
+#Exercise 3
+# Load required packages
+library(dplyr)
+library(tidyr)
+
+# Create a wide summary table
+body_mass_summary <- penguins_spatial |>
+  drop_na(body_mass_g) |>
+  group_by(species, island) |>
+  summarise(
+    max_body_mass = max(body_mass_g),
+    .groups = "drop"
+  ) |>
+  pivot_wider(
+    names_from = island,
+    values_from = max_body_mass
+  )
+
+# View the table
+print(body_mass_summary)
+```{r}
+#creating table
+library(knitr)
+body_mass_summary |>
+  kable(
+    caption = "Maximum Body Mass (g) of Penguin Species by Island"
+  )
+```{r}
+library(dplyr)
+library(tidyr)
+library(knitr)
+
+body_mass_summary <- penguins_spatial |>
+  drop_na(body_mass_g) |>
+  group_by(species, island) |>
+  summarise(
+    max_body_mass = max(body_mass_g),
+    .groups = "drop"
+  ) |>
+  pivot_wider(
+    names_from = island,
+    values_from = max_body_mass
+  )
+
+kable(
+  body_mass_summary,
+  caption = "Maximum Body Mass (g) of Penguin Species by Island"
+)
+```
